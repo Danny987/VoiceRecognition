@@ -34,8 +34,9 @@ public class AndroidLauncher extends AndroidApplication implements VoiceRecognit
 		}
 		
 		
+		VoiceRecognitionTest game = new VoiceRecognitionTest(this);
 		
-		initialize(new VoiceRecognitionTest(), config);
+		initialize(game, config);
 	}
 
 	
