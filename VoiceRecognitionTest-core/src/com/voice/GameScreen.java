@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen, SpeechRecognitionResultHandler{
+
+	
 	VoiceRecognitionTest game;
 	SpriteBatch batch;
 	BitmapFont font;
@@ -17,20 +19,32 @@ public class GameScreen implements Screen, SpeechRecognitionResultHandler{
 	
 	String tester;
 	
+	boolean voiceInUse = false;
+	int voiceTimer = 0;
+	
 	public GameScreen(VoiceRecognitionTest game){
 		this.game = game;
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.RED);
+		font.setScale(4);
 		
 		game.startVoiceRecognition(this);
+		voiceInUse = true;
 		tester = "no result";
+		
+		
 	}
 	
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		game.startVoiceRecognition(this);
+	
+		if(voiceTimer > 60){
+			game.restartVoiceService();
+		}
+		
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
@@ -83,14 +97,13 @@ public class GameScreen implements Screen, SpeechRecognitionResultHandler{
 	@Override
 	public void onReadyForSpeech() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void gotSpeechResults(ArrayList<String> results) {
 		// TODO Auto-generated method stub
-		tester = results.get(0);
-		System.out.println("here");
+		tester = results.toString();
+		voiceTimer = 0;
 		
 	}
 

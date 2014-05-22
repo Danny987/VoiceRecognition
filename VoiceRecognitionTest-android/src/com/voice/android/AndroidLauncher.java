@@ -2,7 +2,9 @@ package com.voice.android;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognitionListener;
@@ -17,9 +19,11 @@ import com.voice.VoiceRecognitionTest;
 
 public class AndroidLauncher extends AndroidApplication implements VoiceRecognitionService {
 	
-	protected SpeechRecognizer speechRecognizer;
+	public SpeechRecognizer speechRecognizer;
 	private SpeechRecognitionResultHandler speechRecognitionResultHandler;
 	private SpeechRecognitionResultHandler resultHandler;
+	
+	AudioManager audioManager;
 	
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class AndroidLauncher extends AndroidApplication implements VoiceRecognit
 			speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 			speechRecognizer.setRecognitionListener(new Listener());
 		}
+		
+		audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		
 		
 		VoiceRecognitionTest game = new VoiceRecognitionTest(this);
@@ -67,7 +73,14 @@ public class AndroidLauncher extends AndroidApplication implements VoiceRecognit
 	}
 
 	@Override
+	public void restartVoiceService(){
+		speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+		speechRecognizer.setRecognitionListener(new Listener());
+	}
+	
+	@Override
 	public void startVoiceRecognition(SpeechRecognitionResultHandler callback) {
+		audioManager.setStreamSolo(AudioManager.STREAM_VOICE_CALL, true);
 		// TODO Auto-generated method stub
 		speechRecognitionResultHandler = callback;
 		Handler mainHandler = new Handler(this.getMainLooper());
@@ -134,6 +147,7 @@ public class AndroidLauncher extends AndroidApplication implements VoiceRecognit
 		
 		public void onReadyForSpeech(Bundle params) {
 			// TODO Auto-generated method stub
+			
 			speechRecognitionResultHandler.onReadyForSpeech();
 		}
 
@@ -146,6 +160,7 @@ public class AndroidLauncher extends AndroidApplication implements VoiceRecognit
 			if(speechRecognitionResultHandler != null){
 				speechRecognitionResultHandler.gotSpeechResults(voiceData);
 			}
+			audioManager.setStreamSolo(AudioManager.STREAM_VOICE_CALL, false);
 		}
 
 		

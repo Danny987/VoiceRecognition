@@ -32,4 +32,9 @@ public class DesktopLauncher implements VoiceRecognitionService {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void restartVoiceService() {
+		// TODO Auto-generated method stub
+		
+	}
 }

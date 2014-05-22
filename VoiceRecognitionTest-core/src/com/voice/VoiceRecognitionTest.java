@@ -28,6 +28,10 @@ public class VoiceRecognitionTest extends Game implements SpeechRecognitionResul
 		setScreen(new GameScreen(this));
 	}
 	
+	public void restartVoiceService(){
+		this.voiceRecognitionService.restartVoiceService();
+	}
+	
 	@Override
 	public boolean isServiceAvailable() {
 		// TODO Auto-generated method stub
